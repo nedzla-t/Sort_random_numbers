@@ -4,10 +4,10 @@ import { sortNumbers } from './apiService';
 const SortingApp = () => {
   const [numbers, setNumbers] = useState(Array(10).fill(''));
   const [sortedNumbers, setSortedNumbers] = useState([]);
-  const [sortOrder, setSortOrder] = useState('ascending'); // default to ascending
+  const [sortOrder, setSortOrder] = useState('ascending');
   const [primeFilterActive, setPrimeFilterActive] = useState(false);
   const [filterCondition, setFilterCondition] = useState({ symbol: '', value: '' });
-  const [staticCards, setStaticCards] = useState([]); // Track which cards are static
+  const [staticCards, setStaticCards] = useState([]);
 
   // Check if a number is prime
   const isPrime = (num) => {
@@ -30,15 +30,15 @@ const SortingApp = () => {
     setNumbers(Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)));
   };
 
-  //Submit handle
+  // Submit handle
   const handleSubmit = async () => {
-      const validNumber = numbers.map(Number).filter(num => !isNaN(num));
-      try {
-          const sortedData = await sortNumbers(validNumber);
-          setSortedNumbers(sortedData);
-      } catch (error) {
-          console.error('Error sorting numbers: ', error);
-      }
+    const validNumber = numbers.map(Number).filter(num => !isNaN(num));
+    try {
+      const sortedData = await sortNumbers(validNumber);
+      setSortedNumbers(sortedData);
+    } catch (error) {
+      console.error('Error sorting numbers: ', error);
+    }
   };
 
   // Handle filter condition
@@ -80,11 +80,13 @@ const SortingApp = () => {
     setStaticCards(newStaticCards);
   };
 
-  // Sort the numbers based on selected order
-  const sortedAndFilteredNumbers = [...sortedNumbers].sort((a, b) => {
-    if (sortOrder === 'ascending') return a - b;
-    return b - a;
-  });
+  // Sort the numbers based on selected order and apply filter
+  const sortedAndFilteredNumbers = [...sortedNumbers]
+    .filter(num => applyFilter(num)) // Apply filter to numbers
+    .sort((a, b) => {
+      if (sortOrder === 'ascending') return a - b;
+      return b - a;
+    });
 
   return (
     <div
